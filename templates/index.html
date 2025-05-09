@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+</head>
+<body onload="showGreeting()">
+    <div class="chat-container">
+        <h2 class="chat-header">Chatbot</h2>
+        <div id="chatbox" class="chatbox"></div>
+        <div class="input-container">
+            <input type="text" id="user-input" placeholder="Type your message..." autofocus>
+            <button onclick="sendMessage()">&gt;</button>
+        </div>
+    </div>
+
+    <script>
+        // Function to show the initial greeting message
+        function showGreeting() {
+            const chatbox = document.getElementById("chatbox");
+            const greeting = "Hello! How can I assist you today?";
+            chatbox.innerHTML += `<div class="bot-message">${greeting}</div>`;
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+
+        // Typing effect for chatbot responses
+        function typeWriterEffect(element, text, speed = 50) {
+            let index = 0;
+            function type() {
+                if (index < text.length) {
+                    element.innerHTML += text.charAt(index);
+                    index++;
+                    setTimeout(type, speed);
+                } else {
+                    // Remove the typing class after typing completes
+                    element.classList.remove("typing");
+                }
+            }
+            type();
+        }
+
+        // Send message when button is clicked or Enter key is pressed
+        async function sendMessage() {
+            const userInput = document.getElementById("user-input");
+            const userMessage = userInput.value;
+            if (!userMessage) return;
+
+            const chatbox = document.getElementById("chatbox");
+            chatbox.innerHTML += `<div class="user-message">${userMessage}</div>`;
+
+            // Show the "thinking" message
+            chatbox.innerHTML += `<div class="bot-message thinking">Bot is typing...</div>`;
+            chatbox.scrollTop = chatbox.scrollHeight;
+
+            try {
+                const response = await fetch("http://127.0.0.1:5000/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: userMessage })
+                });
+
+                if (!response.ok) throw new Error("Network response was not ok");
+
+                const data = await response.json();
+                document.querySelector(".thinking").remove();
+
+                // Create the bot message element with a typing effect
+                const botMessage = document.createElement("div");
+                botMessage.className = "bot-message typing";
+                chatbox.appendChild(botMessage);
+
+                // Apply the typing effect
+                typeWriterEffect(botMessage, data.response, 50);
+
+                userInput.value = "";
+                chatbox.scrollTop = chatbox.scrollHeight;
+            } catch (error) {
+                alert("Error: " + error.message);
+            }
+        }
+
+        // Trigger sendMessage when Enter key is pressed
+        document.addEventListener("DOMContentLoaded", function () {
+            const userInput = document.getElementById("user-input");
+            userInput.addEventListener("keypress", function (event) {
+                if (event.key === "Enter") {
+                    sendMessage();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

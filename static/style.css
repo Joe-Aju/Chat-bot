@@ -1,0 +1,171 @@
+/* General styling */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.chat-header{
+    text-align: center;
+}
+
+.chat-container {
+    width: 100%;
+    max-width: 1000px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    padding: 20px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+/* App Heading */
+.app-heading {
+    font-size: 24px;
+    font-weight: bold;
+    color: #25d366; /* WhatsApp green */
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Chatbox styling */
+#chatbox {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 10px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Message styling */
+.user-message, .bot-message {
+    padding: 10px 15px;
+    margin: 5px 0;
+    font-size: 16px;
+    border-radius: 10px;
+    max-width: 75%;
+    word-wrap: break-word;
+    line-height: 1.4;
+    display: inline-block;
+    position: relative;
+}
+
+/* User's message */
+.user-message {
+    background-color: #25d366; /* WhatsApp green */
+    color: white;
+    align-self: flex-end;
+    margin-left: auto;
+    border-radius: 12px;
+    max-width: 75%;
+}
+
+/* Bot's message */
+.bot-message {
+    background-color: #e4e6eb; /* Light gray */
+    color: #333;
+    align-self: flex-start;
+    margin-right: 15px;
+    border-radius: 12px;
+    max-width: 75%;
+}
+
+/* Thinking bubble */
+.thinking {
+    font-style: italic;
+    color: #888;
+    text-align: center;
+    font-size: 14px;
+    padding: 10px;
+}
+
+/* Scroll behavior */
+#chatbox {
+    scroll-behavior: smooth;
+}
+
+/* Input container styling */
+.input-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    gap: 20px;
+}
+
+input[type="text"] {
+    width: 85%;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 25px;
+    border: 1px solid #ddd;
+    outline: none;
+    box-sizing: border-box;
+    background-color: #fafafa;
+}
+
+input[type="text"]:focus {
+    border-color: #00bfae;
+}
+
+button {
+    width: 50px;
+    height: 50px;
+    background-color: #25d366; /* WhatsApp green */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #128c7e;
+}
+
+button:focus {
+    outline: none;
+}
+
+/* Responsive styling for mobile screens */
+@media (max-width: 480px) {
+    .chat-container {
+        width: 90%;
+        height: 90%;
+    }
+
+    input[type="text"] {
+        width: 70%;
+    }
+}
+
+
+/* Fade-in animation for bot messages */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animated-bot-message {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
