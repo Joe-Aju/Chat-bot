@@ -21,27 +21,30 @@ def home():
 
 @app.route("/chat", methods=["POST"])
 def chat():
-    data = request.json
-    question = data.get("message", "")
+    if request.method == "POST":
+        data = request.json
+        question = data.get("message", "")
+        try:
+            # OpenAI Chat Response
+            client = openai.AzureOpenAI(
+                api_key=AZURE_OPENAI_KEY,
+                azure_endpoint=AZURE_OPENAI_ENDPOINT,
+                api_version=AZURE_API_VERSION
+            )
 
-    try:
-        # OpenAI Chat Response
-        client = openai.AzureOpenAI(
-            api_key=AZURE_OPENAI_KEY,
-            azure_endpoint=AZURE_OPENAI_ENDPOINT,
-            api_version=AZURE_API_VERSION
-        )
+            response = client.chat.completions.create(
+                model=AZURE_DEPLOYMENT_NAME,
+                messages=[{"role": "user", "content": question}],
+                temperature=0.7
+            )
+            answer = response.choices[0].message.content
+            return jsonify({"response": answer})
+        except Exception as e:
+            return jsonify({"response": f"Error: {str(e)}"}), 500
+    else:
+        return jsonify({"response": "Method not allowed"}), 405
 
-        response = client.chat.completions.create(
-            model=AZURE_DEPLOYMENT_NAME,
-            messages=[{"role": "user", "content": question}],
-            temperature=0.7
-        )
-        answer = response.choices[0].message.content
-
-        return jsonify({"response": answer})
-    except Exception as e:
-        return jsonify({"response": f"Error: {str(e)}"})
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    # Run on port 80 to work with Azure App Service
+    app.run(debug=True, host="0.0.0.0", port=80)

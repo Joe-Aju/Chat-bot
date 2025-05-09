@@ -17,7 +17,6 @@
     </div>
 
     <script>
-        // Function to show the initial greeting message
         function showGreeting() {
             const chatbox = document.getElementById("chatbox");
             const greeting = "Hello! How can I assist you today?";
@@ -25,7 +24,6 @@
             chatbox.scrollTop = chatbox.scrollHeight;
         }
 
-        // Typing effect for chatbot responses
         function typeWriterEffect(element, text, speed = 50) {
             let index = 0;
             function type() {
@@ -34,14 +32,12 @@
                     index++;
                     setTimeout(type, speed);
                 } else {
-                    // Remove the typing class after typing completes
                     element.classList.remove("typing");
                 }
             }
             type();
         }
 
-        // Send message when button is clicked or Enter key is pressed
         async function sendMessage() {
             const userInput = document.getElementById("user-input");
             const userMessage = userInput.value;
@@ -55,9 +51,12 @@
             chatbox.scrollTop = chatbox.scrollHeight;
 
             try {
-                const response = await fetch("http://127.0.0.1:5000/chat", {
+                // Use the Azure hosted backend URL here
+                const response = await fetch("https://chat-bot-fddnbka0dwfubeet.eastasia-01.azurewebsites.net/chat", {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
                     body: JSON.stringify({ message: userMessage })
                 });
 
@@ -81,7 +80,6 @@
             }
         }
 
-        // Trigger sendMessage when Enter key is pressed
         document.addEventListener("DOMContentLoaded", function () {
             const userInput = document.getElementById("user-input");
             userInput.addEventListener("keypress", function (event) {
